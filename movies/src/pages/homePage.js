@@ -8,7 +8,6 @@ const MovieListPage = (props) => {
   const [movies, setMovies] = useState([]);
   const [nameFilter, setNameFilter] = useState("");
   const [genreFilter, setGenreFilter] = useState("0");
-
   const genreId = Number(genreFilter);
 
   let displayedMovies = movies
@@ -19,10 +18,10 @@ const MovieListPage = (props) => {
       return genreId > 0 ? m.genre_ids.includes(genreId) : true;
     });
 
-    const handleChange = (e, type, value) => {
-      e.preventDefault()
-      props.onUserInput(type, value)   // NEW
-    }
+  const handleChange = (type, value) => {
+    if (type === "name") setNameFilter(value);
+    else setGenreFilter(value);
+  };
 
     const addToFavorites = (movieId) => {
       const updatedMovies = movies.map((m) =>
@@ -53,10 +52,10 @@ const MovieListPage = (props) => {
       <Grid item container spacing={5}>
         <Grid key="find" item xs={12} sm={6} md={4} lg={3} xl={2}>
         <FilterCard
-      onUserInput={handleChange}
-      titleFilter={nameFilter}
-      genreFilter={genreFilter}
-    />
+           onUserInput={handleChange}
+           titleFilter={nameFilter}
+           genreFilter={genreFilter}
+         />
         </Grid>
         <MovieList movies={displayedMovies} selectFavorite={addToFavorites} />      </Grid>
     </Grid>
