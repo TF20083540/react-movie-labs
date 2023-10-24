@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import PageTemplate from '../components/templateMovieListPage'
 import { getUpcomingMovies } from "../api/tmdb-api";
 import AddToFavoritesIcon from "../components/cardIcons/addToFavourites";
-
-
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 const HomePage = (props) => {
   const [movies, setMovies] = useState([]);
   const favorites = movies.filter(m => m.favorite)
@@ -30,7 +29,7 @@ const HomePage = (props) => {
 
       //Week 7 - Exercise 1
       action={(movie) => {
-        return <AddToFavoritesIcon movie={movie} />
+        return <PlaylistAddIcon movie={movie} />
       }}
 
     />
