@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useForm, Controller } from "react-hook-form";
+import { MoviesContext } from "../../contexts/moviesContext";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 
 const ratings = [
   {
@@ -28,6 +32,8 @@ const ratings = [
     label: "Terrible",
   },
 ];
+
+
 
 const styles = {
   root: {
@@ -56,8 +62,13 @@ const styles = {
   },
 };
 
+
+
 const ReviewForm = ({ movie }) => {
   const [rating, setRating] = useState(3);
+  const [open, setOpen] = useState(false); 
+  const navigate = useNavigate();
+  const context = useContext(MoviesContext);
   
   const defaultValues = {
     author: "",
@@ -77,10 +88,17 @@ const ReviewForm = ({ movie }) => {
     setRating(event.target.value);
   };
 
+  const handleSnackClose = (event) => {
+    setOpen(false);
+    navigate("/movies/favorites");
+  };
+
   const onSubmit = (review) => {
     review.movieId = movie.id;
     review.rating = rating;
-    console.log(review);
+    // console.log(review);
+    context.addReview(movie, review);
+    setOpen(true); // NEW
   };
 
   return (
@@ -88,6 +106,23 @@ const ReviewForm = ({ movie }) => {
       <Typography component="h2" variant="h3">
         Write a review
       </Typography>
+
+      <Snackbar
+        sx={styles.snack}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={open}
+        onClose={handleSnackClose}
+      >
+        <MuiAlert
+          severity="success"
+          variant="filled"
+          onClose={handleSnackClose}
+        >
+          <Typography variant="h4">
+            Thank you for submitting a review
+          </Typography>
+        </MuiAlert>
+      </Snackbar>
 
       <form sx={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
         <Controller
@@ -195,5 +230,7 @@ const ReviewForm = ({ movie }) => {
     </Box>
   );
 };
+
+
 
 export default ReviewForm;
