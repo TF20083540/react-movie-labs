@@ -1,33 +1,12 @@
-import React, { useState, useEffect } from "react";
-import PageTemplate from '../components/templateMovieListPage'
+import React from "react";
 import { getUpcomingMovies } from "../api/tmdb-api";
-import AddToFavoritesIcon from "../components/cardIcons/addToFavourites";
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-//New Imports
-import Spinner from '../components/spinner';
+import PageTemplate from '../components/templateMovieListPage'
 import {useQuery} from 'react-query';
-
+import Spinner from '../components/spinner';
+//import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import AddToPlaylistIcon from "../components/cardIcons/addToWatchlist";
 
 const HomePage = (props) => {
-  /*
-  const [movies, setMovies] = useState([]);
-  //Old Code - Entirely Deprecated
-  const favorites = movies.filter(m => m.favorite)
-  localStorage.setItem('favorites', JSON.stringify(favorites))
-
-  const addToFavorites = (movieId) => {
-    const updatedMovies = movies.map((m) =>
-      m.id === movieId ? { ...m, favorite: true } : m
-    );
-    setMovies(updatedMovies);
-  };
-
-  useEffect(() => {
-    getUpcomingMovies().then(movies => {
-      setMovies(movies);
-    });
-  }, []);
-  */
 
   const {  data, error, isLoading, isError }  = useQuery('upcoming', getUpcomingMovies)
 
@@ -40,15 +19,24 @@ const HomePage = (props) => {
   }  
   const movies = data.results;
 
+  
+  // Redundant, but necessary to avoid app crashing.
+  const mustWatches = movies.filter(m => m.mustWatch)
+  localStorage.setItem('mustWatches', JSON.stringify(mustWatches))
+  const addToMustWatches = (movieId) => true 
+  
+
   return (
     <PageTemplate
-      title='Upcoming'
+      title="Upcoming"
       movies={movies}
-      //selectFavorite={addToFavorites} //Old code
+      selectMustWatch={addToMustWatches} //Old code
 
       //Week 7 - Exercise 1
       action={(movie) => {
-        return <PlaylistAddIcon movie={movie} />
+        //return <PlaylistAddIcon movie={movie} />
+        return <AddToPlaylistIcon movie={movie} />
+
       }}
 
     />
